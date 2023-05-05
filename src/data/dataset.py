@@ -1,8 +1,8 @@
 import pandas as pd
 
 from src.data import RAW_DATA_PATH
-from src.features.build_features import (add_weekday_features,
-                                         add_holiday_features)
+from src.features.build_features import (add_dayofweek_feature,
+                                         add_holiday_feature)
 
 
 def load_raw_data(data_path: str) -> pd.DataFrame:
@@ -58,11 +58,16 @@ def add_index(df: pd.DataFrame) -> None:
     df.sort_index(inplace=True)
 
 
-if __name__ == '__main__':
+def load_dataset_and_build_features() -> pd.DataFrame:
     df = load_raw_data(RAW_DATA_PATH)
     df = merge_ambiguous_rows(df)
     prune_duplicate_rows(df)
-    add_weekday_features(df)
-    add_holiday_features(df)
+    add_dayofweek_feature(df)
+    add_holiday_feature(df)
     add_index(df)
+    return df
+
+
+if __name__ == '__main__':
+    df = load_dataset_and_build_features()
     print(df.head())
