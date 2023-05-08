@@ -68,6 +68,18 @@ def load_dataset_and_build_features() -> pd.DataFrame:
     return df
 
 
+def get_sequence(df: pd.DataFrame, guid: str) -> pd.DataFrame:
+    """Returns a DataFrame indexed by date (not  a multiindex)
+    """
+    if isinstance(df.index, pd.MultiIndex):
+        seq = df.loc[guid]
+    else:
+        seq = (df[df.seq_guid == guid]
+               .drop('seq_guid', axis=1)
+               .set_index('date'))
+    return seq
+
+
 if __name__ == '__main__':
     df = load_dataset_and_build_features()
     print(df.head())
